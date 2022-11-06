@@ -1,4 +1,3 @@
-//#include <Stepper.h>
 #include <Unistep2.h>
 
 // Pin configuration
@@ -16,15 +15,13 @@
 #define FEEDER 40
 
 // Stepper configuration
-int lap = 2048;
-//Stepper stepper(lap, 8, 10, 9, 11);
-int speed = 16;
+int lap = 4096;
 int p1 = 8;
 int p2 = 9;
 int p3 = 10;
 int p4 = 11;
 int stepsPerRev = lap;
-int stepDelay = 900;
+int stepDelay = 1100;
 Unistep2 stepperX(p1, p2, p3, p4, stepsPerRev, stepDelay);
   
 // Illuminance  configuration
@@ -78,20 +75,13 @@ void loop() {
       digitalWrite(HEATERPIN, value);
       break;
     case FEEDER: 
-      stepperX.moveTo(0);
-      stepperX.move(1);
-      if (stepperX.currentPosition() == 4095){
-        stepperX.stop();
-        }
-      else{
-        stepperX.run();
-        } 
-      //stepper.step(lap);
+      stepperX.move(lap);  
       break;
     }
 
     // Write serial data
     cds = analogRead(CDSPIN);
     Serial.write(cds / 10);
+    stepperX.run();
   }
 }
